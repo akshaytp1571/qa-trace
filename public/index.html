@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080d17">
+  <meta name="description" content="Turn requirements into a source-linked QA test plan.">
+  <title>QA Trace · Requirements to test plan</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#results-panel">Skip to test plan</a>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand-block">
+        <div class="brand"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="m16 3 12 7-12 7L4 10 16 3Z"/><path d="m4 16 12 7 12-7M4 22l12 7 12-7"/></svg></span><span>QA<span class="brand-light">Trace</span></span></div>
+        <span class="brand-caption">QUALITY ENGINEERING</span>
+      </div>
+      <div class="header-breadcrumb"><span>Workspace</span><span aria-hidden="true">/</span><strong>Requirements</strong></div>
+      <div class="header-actions">
+        <span class="local-indicator"><span aria-hidden="true"></span>Local workspace</span>
+        <button id="demo-button" class="button top-button" type="button"><svg aria-hidden="true" viewBox="0 0 20 20" fill="none"><path d="M4 7a6 6 0 1 1-.4 5M4 3v4h4"/></svg>Load example</button>
+      </div>
+    </div>
+  </header>
+  <main class="shell">
+    <div class="page-heading">
+      <div><p class="eyebrow"><span aria-hidden="true"></span>REQUIREMENTS INTELLIGENCE</p><h1>Requirements to test plan<span class="heading-dot">.</span></h1><p class="page-description">Find the gaps. Connect the evidence. Build a test plan you can trust.</p></div>
+      <div class="workflow-map" aria-label="Workflow"><span>01 <strong>Define</strong></span><i aria-hidden="true">→</i><span>02 <strong>Clarify</strong></span><i aria-hidden="true">→</i><span>03 <strong>Validate</strong></span></div>
+    </div>
+    <div class="workspace">
+      <aside class="input-panel" aria-labelledby="input-title">
+        <form id="analysis-form" method="post" action="/api/analyze" novalidate>
+          <section class="source-block">
+            <div class="setup-heading"><span class="section-number" aria-hidden="true">01</span><div><p class="panel-eyebrow">INPUT</p><h2 id="input-title">Source document</h2></div><svg aria-hidden="true" class="section-symbol" viewBox="0 0 20 20" fill="none"><path d="M6 2h6l4 4v12H4V2h2Zm6 0v5h4M7 11h6M7 14h4"/></svg></div>
+            <div class="source-content">
+              <div class="drop-zone" id="drop-zone"><button class="upload-button" id="upload-button" type="button"><span class="upload-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 16V4m-4 4 4-4 4 4M5 15v5h14v-5"/></svg></span><span><strong>Upload a document</strong><span class="upload-hint">TXT, MD, DOCX or PDF · up to 5 MB</span></span><span class="upload-plus" aria-hidden="true">+</span></button><input id="file-input" type="file" accept=".txt,.md,.docx,.pdf" hidden></div>
+              <div class="label-row"><label for="document">Or paste requirements</label><button class="text-button" id="clear-source" type="button">Clear</button></div>
+              <div class="editor-wrap"><div class="editor-chrome" aria-hidden="true"><span></span><span></span><span></span><i>SOURCE TEXT</i></div><textarea id="document" name="document" maxlength="24000" rows="9" placeholder="Paste a PRD, user stories, or acceptance criteria…" spellcheck="false" aria-describedby="document-meta"></textarea></div>
+              <div class="document-meta" id="document-meta"><span id="document-name"></span><span id="character-count">0 / 24,000</span></div>
+              <div class="storage-note"><svg aria-hidden="true" viewBox="0 0 20 20" fill="none"><path d="m10 2 6 3v5c0 4-6 7-6 7s-6-3-6-7V5l6-3Zm-3 7 2 2 4-4"/></svg><p id="workspace-note" class="field-hint">Requirements, answers and the last plan are saved in this tab. Connection settings and API keys are never saved.</p></div>
+              <button id="reset-workspace" class="text-button" type="button">Start a new document <span aria-hidden="true">↗</span></button>
+            </div>
+          </section>
+          <details class="connection" id="connection-settings">
+            <summary class="connection-summary"><span class="section-number" aria-hidden="true">02</span><span><span class="panel-eyebrow">CONFIGURATION</span><span class="section-label">AI connection</span></span><svg class="disclosure-icon" aria-hidden="true" viewBox="0 0 20 20" fill="none"><path d="m6 8 4 4 4-4"/></svg></summary>
+            <div class="connection-content">
+              <label for="provider">Provider</label><select id="provider" name="provider" aria-describedby="model-hint"></select><p id="model-hint" class="field-hint"></p>
+              <div id="gateway-fields" hidden>
+                <label for="base-url">Base URL</label><input id="base-url" type="url" maxlength="2048" placeholder="https://openrouter.ai/api/v1" autocomplete="off" spellcheck="false" aria-describedby="base-url-hint"><p id="base-url-hint" class="field-hint">Use your gateway's API base. QA Trace appends /chat/completions.</p>
+                <label for="output-mode">JSON output mode</label><select id="output-mode" aria-describedby="output-mode-hint"><option value="json_object">JSON object</option><option value="json_schema">JSON schema (strict)</option><option value="prompt">Prompt only (compatibility)</option></select><p id="output-mode-hint" class="field-hint">Choose a mode supported by your gateway and model. All results are validated.</p>
+                <details class="request-details"><summary>Request settings</summary><label for="timeout-seconds">Timeout (seconds)</label><input id="timeout-seconds" type="number" min="30" max="300" step="1" value="300" aria-describedby="timeout-hint"><p id="timeout-hint" class="field-hint">30–300 seconds. Your gateway may impose a shorter limit.</p><label for="output-tokens">Maximum output tokens</label><input id="output-tokens" type="number" min="1024" max="16384" step="1" value="16384" aria-describedby="tokens-hint"><p id="tokens-hint" class="field-hint">A lower cap can help slower models. If a plan is cut short, use a smaller section or raise the cap.</p></details>
+              </div>
+              <details class="model-details"><summary>Model settings</summary><div class="model-fields"><label for="model">Model ID</label><input id="model" name="model" type="text" maxlength="160" autocomplete="off" spellcheck="false"></div></details>
+              <label for="api-key">API key</label><div class="key-field"><input id="api-key" name="provider-key" type="password" maxlength="512" placeholder="Enter your provider key" autocomplete="new-password" spellcheck="false" aria-describedby="key-hint"><button id="toggle-key" class="text-button reveal-button" type="button" aria-label="Show API key" aria-pressed="false">Show</button></div><p class="field-hint" id="key-hint">QA Trace keeps the key in this tab. Analysis sends your text to the selected provider.</p>
+            </div>
+          </details>
+          <div class="analysis-controls">
+            <button id="configure-connection" type="button" class="connection-prompt"><span class="connection-dot" aria-hidden="true"></span><span id="connection-caption">Set up your AI connection</span><span aria-hidden="true">↗</span></button>
+            <button class="button primary" id="analyze-button" type="submit"><svg aria-hidden="true" viewBox="0 0 20 20" fill="none"><path d="m11 2-6 9h5l-1 7 6-10h-5l1-6Z"/></svg>Analyze requirements<span class="action-arrow" aria-hidden="true">→</span></button>
+            <button class="button cancel-button" id="cancel-button" type="button" hidden>Cancel analysis</button><p id="request-progress" class="field-hint" aria-live="off" hidden></p><div class="feedback" id="feedback" role="status" aria-live="polite" hidden></div>
+          </div>
+        </form>
+      </aside>
+      <section class="result-panel" aria-labelledby="results-title" id="results-panel" aria-busy="true">
+        <div class="results-heading"><div class="result-name"><p class="panel-eyebrow">ANALYSIS WORKSPACE</p><h2 id="results-title">Test plan</h2><p id="result-label" class="result-label">Analysis</p></div><details class="export-menu" id="export-menu" hidden><summary class="button outline"><svg aria-hidden="true" viewBox="0 0 20 20" fill="none"><path d="M10 2v10m-4-4 4 4 4-4M4 13v4h12v-4"/></svg>Export <span aria-hidden="true">⌄</span></summary><div class="export-options"><button type="button" data-export="csv">Traceability matrix (.csv)</button><button type="button" data-export="markdown">Test plan (.md)</button><button type="button" data-export="json">Full analysis (.json)</button></div></details></div>
+        <div id="stale-note" class="stale-note" hidden role="status">Source text or answers changed. Analyze again to update this plan and its exports.</div><div id="empty-state" class="empty-state" role="status">Loading the example plan…</div>
+        <div id="result-body" hidden>
+          <div id="metrics" class="metrics" aria-label="Plan summary"></div>
+          <div class="tabs" id="tabs" role="tablist" aria-label="Analysis views"><button type="button" role="tab" id="tab-matrix" data-tab="matrix" aria-controls="view" aria-selected="true">Traceability matrix</button><button type="button" role="tab" id="tab-scenarios" data-tab="scenarios" aria-controls="view" aria-selected="false" tabindex="-1">Scenarios</button><button type="button" role="tab" id="tab-cases" data-tab="cases" aria-controls="view" aria-selected="false" tabindex="-1">Test cases</button><button type="button" role="tab" id="tab-questions" data-tab="questions" aria-controls="view" aria-selected="false" tabindex="-1">Clarifications</button><button type="button" role="tab" id="tab-recommendations" data-tab="recommendations" aria-controls="view" aria-selected="false" tabindex="-1">Recommendations</button></div>
+          <div class="view" id="view" role="tabpanel" aria-labelledby="tab-matrix" tabindex="0"></div>
+        </div>
+        <div class="panel-footer"><span class="footer-signal" aria-hidden="true"></span>Source-linked evidence<span class="footer-separator" aria-hidden="true">/</span>Human review required</div>
+      </section>
+    </div>
+    <footer class="workspace-footer"><span>QA TRACE <span aria-hidden="true">/</span> QUALITY STARTS WITH CLARITY</span><span>Your requirements. Your provider.</span></footer>
+  </main>
+  <dialog id="source-dialog" aria-labelledby="source-title"><div class="dialog-heading"><div><p class="panel-eyebrow">REQUIREMENT EVIDENCE</p><h2 id="source-title">Source excerpt</h2></div><button type="button" id="close-source" class="button outline">Close</button></div><div id="source-excerpt"></div></dialog>
+</body>
+</html>

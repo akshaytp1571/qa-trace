@@ -1,0 +1,22 @@
+{
+  "name": "qa-trace",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Reviewable QA plans from requirements documents.",
+  "engines": { "node": ">=22.13.0" },
+  "scripts": {
+    "start": "node src/server.mjs",
+    "test": "node --test --test-isolation=none test/*.test.mjs",
+    "test:browser": "node --test --test-isolation=none test/browser.smoke.mjs"
+  },
+  "dependencies": {
+    "jszip": "3.10.1",
+    "mammoth": "1.13.0",
+    "pdfjs-dist": "6.5.438",
+    "yauzl": "3.4.0"
+  },
+  "devDependencies": {
+    "playwright": "1.65.1"
+  }
+}
